@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="7.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="7.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="text:create_document" compatibility="7.1.001" expanded="true" height="68" name="Create Document" width="90" x="45" y="136">
+        <parameter key="text" value="this is a text field located at 211-0R1 at 2 pm"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:process_documents" compatibility="7.1.001" expanded="true" height="103" name="Process Documents" width="90" x="380" y="136">
+        <parameter key="create_word_vector" value="true"/>
+        <parameter key="vector_creation" value="TF-IDF"/>
+        <parameter key="add_meta_information" value="true"/>
+        <parameter key="keep_text" value="false"/>
+        <parameter key="prune_method" value="none"/>
+        <parameter key="prune_below_percent" value="3.0"/>
+        <parameter key="prune_above_percent" value="30.0"/>
+        <parameter key="prune_below_rank" value="0.05"/>
+        <parameter key="prune_above_rank" value="0.95"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+        <parameter key="parallelize_vector_creation" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="text:tokenize" compatibility="7.1.001" expanded="true" height="68" name="Tokenize" width="90" x="179" y="85">
+            <parameter key="mode" value="linguistic tokens"/>
+            <parameter key="characters" value=".:"/>
+            <parameter key="language" value="English"/>
+            <parameter key="max_token_length" value="3"/>
+          </operator>
+          <connect from_port="document" to_op="Tokenize" to_port="document"/>
+          <connect from_op="Tokenize" from_port="document" to_port="document 1"/>
+          <portSpacing port="source_document" spacing="0"/>
+          <portSpacing port="sink_document 1" spacing="0"/>
+          <portSpacing port="sink_document 2" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Create Document" from_port="output" to_op="Process Documents" to_port="documents 1"/>
+      <connect from_op="Process Documents" from_port="example set" to_port="result 1"/>
+      <connect from_op="Process Documents" from_port="word list" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
