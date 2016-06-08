@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="7.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="7.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="text:create_document" compatibility="7.1.001" expanded="true" height="68" name="Create Document" width="90" x="179" y="289">
+        <parameter key="text" value="{&#10;    &quot;glossary&quot;: {&#10;        &quot;title&quot;: &quot;example glossary&quot;,&#10;&#9;&#9;&quot;GlossDiv&quot;: {&#10;            &quot;title&quot;: &quot;S&quot;,&#10;&#9;&#9;&#9;&quot;GlossList&quot;: {&#10;                &quot;GlossEntry&quot;: {&#10;                    &quot;ID&quot;: &quot;SGML&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&quot;SortAs&quot;: &quot;SGML&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&quot;GlossTerm&quot;: &quot;Standard Generalized Markup Language&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&quot;Acronym&quot;: &quot;SGML&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&quot;Abbrev&quot;: &quot;ISO 8879:1986&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&quot;GlossDef&quot;: {&#10;                        &quot;para&quot;: &quot;A meta-markup language, used to create markup languages such as DocBook.&quot;,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&quot;GlossSeeAlso&quot;: [&quot;GML&quot;, &quot;XML&quot;]&#10;                    },&#10;&#9;&#9;&#9;&#9;&#9;&quot;GlossSee&quot;: &quot;markup&quot;&#10;                }&#10;            }&#10;        }&#10;    }&#10;}"/>
+        <parameter key="add label" value="false"/>
+        <parameter key="label_type" value="nominal"/>
+      </operator>
+      <operator activated="true" class="text:documents_to_data" compatibility="7.1.001" expanded="true" height="82" name="Documents to Data" width="90" x="380" y="289">
+        <parameter key="text_attribute" value="Document"/>
+        <parameter key="add_meta_information" value="false"/>
+        <parameter key="datamanagement" value="double_sparse_array"/>
+      </operator>
+      <operator activated="true" class="write_special" compatibility="7.1.001" expanded="true" height="68" name="Write Special Format" width="90" x="648" y="136">
+        <parameter key="example_set_file" value="C:\!!PreSales\demos\write json out.txt"/>
+        <parameter key="special_format" value="$a"/>
+        <parameter key="fraction_digits" value="-1"/>
+        <parameter key="add_line_separator" value="true"/>
+        <parameter key="quote_nominal_values" value="false"/>
+        <parameter key="zipped" value="false"/>
+        <parameter key="overwrite_mode" value="overwrite first, append then"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Create Document" from_port="output" to_op="Documents to Data" to_port="documents 1"/>
+      <connect from_op="Documents to Data" from_port="example set" to_op="Write Special Format" to_port="input"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+    </process>
+  </operator>
+</process>
