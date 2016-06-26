@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<process version="7.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="7.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <parameter key="parallelize_main_process" value="false"/>
+    <process expanded="true">
+      <operator activated="true" class="read_excel" compatibility="7.1.001" expanded="true" height="68" name="Read Excel" width="90" x="179" y="238">
+        <parameter key="sheet_number" value="1"/>
+        <parameter key="imported_cell_range" value="A1"/>
+        <parameter key="encoding" value="SYSTEM"/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="date_format" value=""/>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <list key="data_set_meta_data_information"/>
+        <parameter key="read_not_matching_values_as_missings" value="true"/>
+        <parameter key="datamanagement" value="double_array"/>
+        <description align="center" color="transparent" colored="false" width="126">read from location where your list of files to download is</description>
+      </operator>
+      <operator activated="true" class="loop_examples" compatibility="7.1.001" expanded="true" height="82" name="Loop Examples" width="90" x="581" y="238">
+        <parameter key="iteration_macro" value="example"/>
+        <parameter key="parallelize_example_process" value="false"/>
+        <process expanded="true">
+          <operator activated="true" class="open_file" compatibility="7.1.001" expanded="true" height="68" name="Open File" width="90" x="246" y="187">
+            <parameter key="resource_type" value="URL"/>
+            <parameter key="url" value="%{myurl}"/>
+            <description align="center" color="transparent" colored="false" width="126">resource type is a url</description>
+          </operator>
+          <operator activated="true" class="write_file" compatibility="7.1.001" expanded="true" height="68" name="Write File" width="90" x="581" y="187">
+            <parameter key="resource_type" value="file"/>
+            <parameter key="mime_type" value="application/octet-stream"/>
+            <description align="center" color="transparent" colored="false" width="126">Write the downloaded file</description>
+          </operator>
+          <operator activated="true" class="extract_macro" compatibility="7.1.001" expanded="true" height="68" name="Extract Macro" width="90" x="112" y="187">
+            <parameter key="macro" value="myurl"/>
+            <parameter key="macro_type" value="data_value"/>
+            <parameter key="statistics" value="average"/>
+            <parameter key="attribute_name" value="columnwithurl"/>
+            <parameter key="example_index" value="%{example}"/>
+            <list key="additional_macros"/>
+            <description align="center" color="transparent" colored="false" width="126">get the file download url for current row you will need to select the correct column in parameters</description>
+          </operator>
+          <connect from_port="example set" to_op="Extract Macro" to_port="example set"/>
+          <connect from_op="Open File" from_port="file" to_op="Write File" to_port="file"/>
+          <portSpacing port="source_example set" spacing="0"/>
+          <portSpacing port="sink_example set" spacing="0"/>
+          <portSpacing port="sink_output 1" spacing="0"/>
+        </process>
+        <description align="center" color="transparent" colored="false" width="126">Loop thur every row</description>
+      </operator>
+      <connect from_op="Read Excel" from_port="output" to_op="Loop Examples" to_port="example set"/>
+      <connect from_op="Loop Examples" from_port="example set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
